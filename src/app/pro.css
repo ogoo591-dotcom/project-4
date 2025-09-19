@@ -1,0 +1,138 @@
+.step1 {
+  width: 4600;
+  height: 1199;
+  border-radius: 2px;
+  border-width: 1px;
+  background-color: #131313;
+  border: 1px solid #0000001a;
+}
+.enable {
+  width: 1440px;
+  height: 1024px;
+  background-color: #f4f4f4;
+}
+.formContainer {
+  width: 480px;
+  height: 655px;
+  border-radius: 8px;
+  padding: 32px;
+  background-color: #ffffff;
+  justify-content: space-between;
+  top: 182px;
+  left: 480px;
+}
+.container {
+  width: 416;
+  height: 385;
+  gap: 28px;
+}
+.formHeader {
+  width: 416;
+  height: 129;
+  gap: 8px;
+}
+.main1 {
+  width: 60;
+  height: 60;
+}
+.formTitle1 {
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 100%;
+  letter-spacing: -3%;
+  vertical-align: middle;
+  background: #202124;
+}
+.formTitle2 {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+  vertical-align: middle;
+  color: #8e8e8e;
+}
+.formContainer2 {
+  width: 416;
+  height: 228;
+  gap: 12px;
+}
+.textFeild {
+  width: 416;
+  height: 68;
+  gap: 8px;
+  animation-timing-function: ease-out;
+  animation-duration: 300ms;
+}
+.label {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: -1%;
+  vertical-align: bottom;
+}
+.inputContainer {
+  width: 416;
+  height: 44;
+  border-radius: 8px;
+  padding: 12px;
+  border-width: 1px;
+  border: 1px solid #0ca5e9;
+}
+.btnContainer {
+  width: 416;
+  height: 44;
+  gap: 8px;
+}
+.continueBtn {
+  width: 416;
+  height: 44;
+  border-radius: 6px;
+  gap: 4px;
+  padding-top: 10px 12px;
+  background: #121316;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.lab {
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -1%;
+  color: #ffffff;
+}
+.frame {
+  width: 24;
+  height: 24;
+}
+.lab1 {
+  width: 8;
+  height: 24;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -1%;
+  color: #ffffff;
+}
+.lab2 {
+  width: 16;
+  height: 24;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -1%;
+  color: #ffffff;
+}
+.sum {
+  width: 24;
+  height: 24;
+}
+.vector {
+  width: 7.410001277923584;
+  height: 12;
+  top: 6px;
+  left: 8.29px;
+}
