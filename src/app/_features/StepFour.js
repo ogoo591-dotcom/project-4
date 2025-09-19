@@ -1,0 +1,21 @@
+"use client";
+
+export const StepFour = () => {
+  return (
+    <div className="step">
+      <div className="enable">
+        <div className="formContainer3">
+          <div className="container">
+            <div className="formHeader">
+              <img className="main1" src="./image/logo.png" />
+              <div className="formtitle1">You're All Set 🔥</div>
+              <div className="formTitle2">
+                We have received your submission. Thank you!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
