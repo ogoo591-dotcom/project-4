@@ -145,7 +145,7 @@ export const StepThree = (props) => {
                       <img
                         src="./image/Upload-Icon.png"
                         className="uploadIcon"
-                        alt=""
+                        alt="icon"
                       />
                       <p className="imageText">Browse or Drop Image</p>
                     </div>
@@ -165,7 +165,7 @@ export const StepThree = (props) => {
           <div className="btnContainer">
             <button className="back" type="button" onClick={handleBackStep}>
               <div className="sum">
-                <img className="vector har" src="./image/zuun.png" alt="" />
+                <img className="vector har" src="./image/zuun.png" alt="sum" />
               </div>
               <p className="lab3">Back</p>
             </button>

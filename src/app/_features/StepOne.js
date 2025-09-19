@@ -82,7 +82,7 @@ export const StepOne = (props) => {
         <div className="formContainer">
           <div className="container">
             <div className="formHeader">
-              <img className="main1" src="./image/logo.png" />
+              <img className="main1" src="./image/logo.png" alt="logo" />
               <div className="formtitle1">Join Us! 😎</div>
               <div className="formTitle2">
                 Please provide all current information accurately.
@@ -130,7 +130,7 @@ export const StepOne = (props) => {
                 <p className="lab2">/3</p>
               </div>
               <div className="sum">
-                <img className="vector" src="./image/Vector.png" />
+                <img className="vector" src="./image/Vector.png" alt="sum" />
               </div>
             </button>
           </div>

@@ -7,8 +7,8 @@ export const StepFour = () => {
         <div className="formContainer3">
           <div className="container">
             <div className="formHeader">
-              <img className="main1" src="./image/logo.png" />
-              <div className="formtitle1">You're All Set 🔥</div>
+              <img className="main1" src="./image/logo.png" alt="logo" />
+              <div className="formtitle1">You are All Set 🔥</div>
               <div className="formTitle2">
                 We have received your submission. Thank you!
               </div>

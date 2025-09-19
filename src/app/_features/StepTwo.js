@@ -81,7 +81,7 @@ export const StepTwo = (props) => {
         <div className="formContainer">
           <div className="container">
             <div className="formHeader">
-              <img className="main1" src="./image/logo.png" />
+              <img className="main1" src="./image/logo.png" alt="logo" />
               <div className="formtitle1">Join Us! 😎</div>
               <div className="formTitle2">
                 Please provide all current information accurately.
@@ -149,7 +149,7 @@ export const StepTwo = (props) => {
           <div className="btnContainer">
             <button className="back" onClick={handleBackStep}>
               <div className="sum">
-                <img className="vector har" src="./image/zuun.png" />
+                <img className="vector har" src="./image/zuun.png" alt="sum" />
               </div>{" "}
               <p className="lab3">Back</p>
             </button>
@@ -164,7 +164,7 @@ export const StepTwo = (props) => {
                 <p className="lab4">/3</p>
               </div>
               <div className="sum">
-                <img className="vector" src="./image/Vector.png" />
+                <img className="vector" src="./image/Vector.png" alt="sum" />
               </div>
             </button>
           </div>
