@@ -1,36 +1,42 @@
 "use client";
 
 import { FormInput } from "../_components/form-input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const addStepOneValuesToLocalStorage = (value) => {
-  localStorage.setItem(`stepOne`, JSON.stringify(value));
-};
 export const StepOne = (props) => {
   const { handleNextStep } = props;
 
-  const getStepOneValuesFromLocalStorage = () => {
-    const value = localStorage.getItem(`stepOne`);
-    if (value) {
-      return JSON.parse(value);
-    } else {
-      return {
-        firstName: "",
-        lastName: "",
-        userName: "",
-      };
-    }
-  };
-  const [formValue, setFormValue] = useState(
-    getStepOneValuesFromLocalStorage()
-  );
+  const [formValue, setFormValue] = useState({
+    firstName: "",
+    lastName: "",
+    userName: "",
+  });
 
   const [errorState, setErrorState] = useState({});
+
+  useEffect(() => {
+    try {
+      const value = localStorage.getItem("stepOne");
+      if (value) {
+        setFormValue(JSON.parse(value));
+      }
+    } catch (err) {
+      console.error("localStorage read error:", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("stepOne", JSON.stringify(formValue));
+    } catch (err) {
+      console.error("localStorage write error:", err);
+    }
+  }, [formValue]);
 
   const handleInputChange = (e) => {
     const inputName = e.target.name;
     const inputValue = e.target.value;
-    setFormValue({ ...formValue, [inputName]: [inputValue] });
+    setFormValue({ ...formValue, [inputName]: inputValue });
   };
 
   const validateInput = () => {
@@ -60,7 +66,6 @@ export const StepOne = (props) => {
     const errors = validateInput();
     if (Object.keys(errors).length === 0) {
       setErrorState({});
-      addStepOneValuesToLocalStorage(formValue);
       handleNextStep();
     } else {
       setErrorState(errors);
@@ -90,31 +95,31 @@ export const StepOne = (props) => {
             </div>
             <div className="formContainer2">
               <FormInput
-                inputTag={`First Name`}
-                placeholder={`Your first name`}
+                inputTag="First Name"
+                placeholder="Your first name"
                 handleChange={handleInputChange}
-                name={`firstName`}
+                name="firstName"
                 value={formValue.firstName}
                 error={errorState.firstName}
-                errorMessage={`Нэрээ оруулна уу`}
+                errorMessage="Нэрээ оруулна уу"
               />
               <FormInput
-                inputTag={`Last Name`}
-                placeholder={`Your last name`}
+                inputTag="Last Name"
+                placeholder="Your last name"
                 handleChange={handleInputChange}
-                name={`lastName`}
+                name="lastName"
                 value={formValue.lastName}
                 error={errorState.lastName}
-                errorMessage={`Овгоо оруулна уу.`}
+                errorMessage="Овгоо оруулна уу."
               />
               <FormInput
-                inputTag={`User Name`}
-                placeholder={`Your user name`}
+                inputTag="User Name"
+                placeholder="Your user name"
                 handleChange={handleInputChange}
-                name={`userName`}
+                name="userName"
                 value={formValue.userName}
                 error={errorState.userName}
-                errorMessage={`Хэрэглэгчийн нэрээ оруулна уу`}
+                errorMessage="Хэрэглэгчийн нэрээ оруулна уу"
               />
             </div>
           </div>
@@ -123,6 +128,7 @@ export const StepOne = (props) => {
               disabled={disabledValue}
               onClick={handleButtonClick}
               className="continueBtn"
+              type="button"
             >
               <p className="lab">Continue</p>
               <div className="frame">

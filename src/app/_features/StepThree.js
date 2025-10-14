@@ -2,21 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-const addStepThreeValuesToLocalStorage = (value) => {
-  localStorage.setItem("stepThree", JSON.stringify(value));
-};
-
-const getStepThreeValuesFromLocalStorage = () => {
-  const value = localStorage.getItem("stepThree");
-  if (value) {
-    return JSON.parse(value);
-  } else {
-    return {
-      date: "",
-      profileDataUrl: "",
-    };
-  }
-};
 const fileToDataURL = (file) =>
   new Promise((resolve, reject) => {
     const fr = new FileReader();
@@ -25,29 +10,53 @@ const fileToDataURL = (file) =>
     fr.readAsDataURL(file);
   });
 
-export const StepThree = (props) => {
-  const { handleNextStep, handleBackStep } = props;
-  const [formValue, setFormValue] = useState(
-    getStepThreeValuesFromLocalStorage()
-  );
+export const StepThree = ({ handleNextStep, handleBackStep }) => {
+  const [formValue, setFormValue] = useState({
+    date: "",
+    profileDataUrl: "",
+  });
   const [profileFile, setProfileFile] = useState(null);
   const [imgUrl, setImgUrl] = useState("");
   const [errorState, setErrorState] = useState({});
 
   useEffect(() => {
-    if (formValue.profileDataUrl) {
-      setImgUrl(formValue.profileDataUrl);
-    } else {
-      setImgUrl("");
-    }
-  }, [formValue.profileDataUrl]);
+    try {
+      const raw = localStorage.getItem("stepThree");
+      if (raw) {
+        const saved = JSON.parse(raw);
+        setFormValue(saved);
+        if (saved.profileDataUrl) setImgUrl(saved.profileDataUrl);
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("stepThree", JSON.stringify(formValue));
+    } catch {}
+  }, [formValue]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    const next = { ...formValue, [name]: value };
-    setFormValue(next);
-    addStepThreeValuesToLocalStorage(next);
+    setFormValue((prev) => ({ ...prev, [name]: value }));
     setErrorState((prev) => ({ ...prev, [name]: undefined }));
+  };
+
+  const handleImgUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type?.startsWith("image/")) {
+      setErrorState((prev) => ({
+        ...prev,
+        file: "Зөвхөн зураг файл оруулна уу",
+      }));
+      return;
+    }
+    const dataUrl = await fileToDataURL(file);
+    setProfileFile(file);
+    setImgUrl(dataUrl);
+    setFormValue((prev) => ({ ...prev, profileDataUrl: dataUrl }));
+    setErrorState((prev) => ({ ...prev, file: undefined }));
   };
 
   const validateInput = () => {
@@ -68,10 +77,7 @@ export const StepThree = (props) => {
     }
     if (!profileFile && !formValue.profileDataUrl) {
       errors.file = "Профайл зурагаа оруулна уу";
-    } else if (profileFile && !profileFile.type?.startsWith?.("image/")) {
-      errors.file = "Зөвхөн зураг файл оруулна уу";
     }
-
     return errors;
   };
 
@@ -79,27 +85,11 @@ export const StepThree = (props) => {
     const errors = validateInput();
     if (Object.keys(errors).length === 0) {
       setErrorState({});
-      addStepThreeValuesToLocalStorage(formValue);
       handleNextStep && handleNextStep({});
     } else {
       setErrorState(errors);
     }
   };
-
-  const handleImgUpload = async (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    else {
-      const dataUrl = await fileToDataURL(file);
-      setProfileFile(file);
-      setImgUrl(dataUrl);
-      const next = { ...formValue, profileDataUrl: dataUrl };
-      setFormValue(next);
-      addStepThreeValuesToLocalStorage(next);
-      setErrorState((prev) => ({ ...prev, file: undefined }));
-    }
-  };
-
   return (
     <div className="step">
       <div className="enable">

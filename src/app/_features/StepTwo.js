@@ -1,35 +1,40 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { FormInput } from "../_components/form-input";
-import { useState } from "react";
-
-const addStepTwoValuesToLocalStorage = (value) => {
-  localStorage.setItem(`stepTwo`, JSON.stringify(value));
-};
 
 export const StepTwo = (props) => {
   const { handleNextStep, handleBackStep } = props;
-  const getStepTwoValuesFromLocalStorage = () => {
-    const value = localStorage.getItem(`stepTwo`);
-    if (value) {
-      return JSON.parse(value);
-    } else {
-      return {
-        email: "",
-        phoneNumber: "",
-        password: "",
-        confirmPassword: "",
-      };
-    }
-  };
-  const [formValue, setFormValue] = useState(
-    getStepTwoValuesFromLocalStorage()
-  );
+
+  const [formValue, setFormValue] = useState({
+    email: "",
+    phoneNumber: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const [errorState, setErrorState] = useState({});
+
+  useEffect(() => {
+    try {
+      const value = localStorage.getItem("stepTwo");
+      if (value) {
+        setFormValue(JSON.parse(value));
+      }
+    } catch (err) {
+      console.error("localStorage read error:", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("stepTwo", JSON.stringify(formValue));
+    } catch (err) {
+      console.error("localStorage read error:", err);
+    }
+  }, [formValue]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -58,22 +63,17 @@ export const StepTwo = (props) => {
     const errors = validateInput();
     if (Object.keys(errors).length === 0) {
       setErrorState({});
-      addStepTwoValuesToLocalStorage(formValue);
       handleNextStep();
     } else {
       setErrorState(errors);
     }
   };
 
-  const shouldDisableButton = () => {
-    return (
-      formValue.email.length === 0 ||
-      formValue.phoneNumber.length === 0 ||
-      formValue.password.length === 0 ||
-      formValue.confirmPassword.length === 0
-    );
-  };
-  const disabledValue = shouldDisableButton();
+  const disabledValue =
+    !formValue.email ||
+    !formValue.phoneNumber ||
+    !formValue.password ||
+    !formValue.confirmPassword;
 
   return (
     <div className="step">
@@ -87,76 +87,85 @@ export const StepTwo = (props) => {
                 Please provide all current information accurately.
               </div>
             </div>
+
             <div className="formContainer2">
               <FormInput
-                inputTag={`Email`}
-                placeholder={`Your email`}
+                inputTag="Email"
+                placeholder="Your email"
                 handleChange={handleInputChange}
-                name={`email`}
+                name="email"
                 value={formValue.email}
                 error={errorState.email}
-                errorMessage={`Мэйл хаягаа оруулна `}
+                errorMessage="Мэйл хаягаа оруулна "
               />
+
               <FormInput
-                inputTag={`Phone Number`}
-                placeholder={`Your phone number`}
+                inputTag="Phone Number"
+                placeholder="Your phone number"
                 handleChange={handleInputChange}
-                name={`phoneNumber`}
+                name="phoneNumber"
                 value={formValue.phoneNumber}
                 error={errorState.phoneNumber}
-                errorMessage={`Утасны дугаараа оруулна уу.`}
+                errorMessage="Утасны дугаараа оруулна уу."
               />
+
               <div className="textFeild" style={{ position: "relative" }}>
                 <FormInput
-                  inputTag={`Password`}
-                  placeholder={`Your password`}
+                  inputTag="Password"
+                  placeholder="Your password"
                   handleChange={handleInputChange}
-                  name={`password`}
+                  name="password"
                   value={formValue.password}
                   error={errorState.password}
-                  errorMessage={`Нууц үгээ оруулна уу`}
+                  errorMessage="Нууц үгээ оруулна уу"
                   type={showPassword ? "text" : "password"}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
                   className="eyeBtn"
+                  aria-label="Toggle password visibility"
                 >
                   {showPassword ? "👁️" : "👁️‍🗨️"}
                 </button>
               </div>
+
               <div className="textFeild" style={{ position: "relative" }}>
                 <FormInput
-                  inputTag={`Confirm Password`}
-                  placeholder={`Your confirm password`}
+                  inputTag="Confirm Password"
+                  placeholder="Your confirm password"
                   handleChange={handleInputChange}
-                  name={`confirmPassword`}
+                  name="confirmPassword"
                   value={formValue.confirmPassword}
                   error={errorState.confirmPassword}
-                  errorMessage={`Нууц үгээ давтаж оруулна уу`}
+                  errorMessage="Нууц үгээ давтаж оруулна уу"
                   type={showConfirmPassword ? "text" : "password"}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
                   className="eyeBtn"
+                  aria-label="Toggle confirm-password visibility"
                 >
                   {showConfirmPassword ? "👁️" : "👁️‍🗨️"}
                 </button>
               </div>
             </div>
-          </div>{" "}
+          </div>
+
           <div className="btnContainer">
-            <button className="back" onClick={handleBackStep}>
+            <button className="back" type="button" onClick={handleBackStep}>
               <div className="sum">
                 <img className="vector har" src="./image/zuun.png" alt="sum" />
-              </div>{" "}
+              </div>
               <p className="lab3">Back</p>
             </button>
+
             <button
               className="continueBtn2"
               disabled={disabledValue}
               onClick={handleButtonClick}
+              type="button"
             >
               <p className="lab">Continue</p>
               <div className="frame">
