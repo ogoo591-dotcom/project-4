@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormInput } from "../_components/form-input";
 
 export const StepTwo = (props) => {
@@ -23,16 +23,21 @@ export const StepTwo = (props) => {
       if (value) {
         setFormValue(JSON.parse(value));
       }
-    } catch (err) {
-      console.error("localStorage read error:", err);
+    } catch (e) {
+      console.error("localStorage read error:", e);
     }
   }, []);
+  const saveTimer = useRef(null);
 
   useEffect(() => {
     try {
-      localStorage.setItem("stepTwo", JSON.stringify(formValue));
-    } catch (err) {
-      console.error("localStorage read error:", err);
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+      saveTimer.current = setTimeout(() => {
+        localStorage.setItem("stepTwo", JSON.stringify(formValue));
+      }, 200);
+      return () => clearTimeout(saveTimer.current);
+    } catch (e) {
+      console.error("localStorage write error:", e);
     }
   }, [formValue]);
 
@@ -43,19 +48,32 @@ export const StepTwo = (props) => {
 
   const validateInput = () => {
     const errors = {};
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formValue.email)) {
-      errors.email = "Please enter a valid email address.";
+
+    if (!formValue.email.trim()) {
+      errors.email = "Email хаягаа оруулна уу.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formValue.email)) {
+      errors.email = "И-мэйл формат буруу байна.";
     }
-    if (!/^[0-9]{8,12}$/.test(formValue.phoneNumber)) {
-      errors.phoneNumber = "Please enter a valid phone number.";
+
+    if (!formValue.phoneNumber.trim()) {
+      errors.phoneNumber = "Утасны дугаараа оруулна уу.";
+    } else if (!/^[0-9]{8,12}$/.test(formValue.phoneNumber)) {
+      errors.phoneNumber = "8–12 оронтой тоо байх ёстой.";
     }
-    if (!/^(?=.*[A-Za-z])(?=.*\d)[^\s]{8,}$/.test(formValue.password)) {
+
+    if (!formValue.password) {
+      errors.password = "Нууц үгээ оруулна уу.";
+    } else if (!/^(?=.*[A-Za-z])(?=.*\d)[^\s]{8,}$/.test(formValue.password)) {
       errors.password =
-        "Password must be 8+ chars and include at least 1 letter and 1 number.";
+        "Доод тал нь 8 тэмдэгт, 1 үсэг + 1 тоо агуулсан байх ёстой.";
     }
-    if (formValue.password !== formValue.confirmPassword) {
-      errors.confirmPassword = "Passwords do not match.";
+
+    if (!formValue.confirmPassword) {
+      errors.confirmPassword = "Нууц үгээ давтаж оруулна уу.";
+    } else if (formValue.password !== formValue.confirmPassword) {
+      errors.confirmPassword = "Нууц үг таарахгүй байна.";
     }
+
     return errors;
   };
 
@@ -63,17 +81,18 @@ export const StepTwo = (props) => {
     const errors = validateInput();
     if (Object.keys(errors).length === 0) {
       setErrorState({});
+      try {
+        localStorage.setItem("stepTwo", JSON.stringify(formValue));
+      } catch (e) {
+        console.error("localStorage write error:", e);
+      }
       handleNextStep();
     } else {
       setErrorState(errors);
     }
   };
 
-  const disabledValue =
-    !formValue.email ||
-    !formValue.phoneNumber ||
-    !formValue.password ||
-    !formValue.confirmPassword;
+  const disabledValue = false;
 
   return (
     <div className="step">
@@ -95,8 +114,8 @@ export const StepTwo = (props) => {
                 handleChange={handleInputChange}
                 name="email"
                 value={formValue.email}
-                error={errorState.email}
-                errorMessage="Мэйл хаягаа оруулна "
+                error={Boolean(errorState.email)}
+                errorMessage={errorState.email}
               />
 
               <FormInput
@@ -105,8 +124,8 @@ export const StepTwo = (props) => {
                 handleChange={handleInputChange}
                 name="phoneNumber"
                 value={formValue.phoneNumber}
-                error={errorState.phoneNumber}
-                errorMessage="Утасны дугаараа оруулна уу."
+                error={Boolean(errorState.phoneNumber)}
+                errorMessage={errorState.phoneNumber}
               />
 
               <div className="textFeild" style={{ position: "relative" }}>
@@ -116,8 +135,8 @@ export const StepTwo = (props) => {
                   handleChange={handleInputChange}
                   name="password"
                   value={formValue.password}
-                  error={errorState.password}
-                  errorMessage="Нууц үгээ оруулна уу"
+                  error={Boolean(errorState.password)}
+                  errorMessage={errorState.password}
                   type={showPassword ? "text" : "password"}
                 />
                 <button
@@ -137,8 +156,8 @@ export const StepTwo = (props) => {
                   handleChange={handleInputChange}
                   name="confirmPassword"
                   value={formValue.confirmPassword}
-                  error={errorState.confirmPassword}
-                  errorMessage="Нууц үгээ давтаж оруулна уу"
+                  error={Boolean(errorState.confirmPassword)}
+                  errorMessage={errorState.confirmPassword}
                   type={showConfirmPassword ? "text" : "password"}
                 />
                 <button

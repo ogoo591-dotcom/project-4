@@ -20,17 +20,13 @@ export const StepOne = (props) => {
       if (value) {
         setFormValue(JSON.parse(value));
       }
-    } catch (err) {
-      console.error("localStorage read error:", err);
-    }
+    } catch {}
   }, []);
 
   useEffect(() => {
     try {
       localStorage.setItem("stepOne", JSON.stringify(formValue));
-    } catch (err) {
-      console.error("localStorage write error:", err);
-    }
+    } catch {}
   }, [formValue]);
 
   const handleInputChange = (e) => {
@@ -41,27 +37,28 @@ export const StepOne = (props) => {
 
   const validateInput = () => {
     const errors = {};
-    if (
-      /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~`]/.test(formValue.firstName) ||
-      /\d/.test(formValue.firstName)
-    ) {
-      errors.firstName = " Input should have only letters";
+    const onlyLetters = /^[\p{L}\s'-]+$/u;
+
+    if (!formValue.firstName.trim()) {
+      errors.firstName = "Нэрээ оруулна уу";
+    } else if (!onlyLetters.test(formValue.firstName)) {
+      errors.firstName = "Нэр зөвхөн үсгээр байх ёстой";
     }
-    if (
-      /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~`]/.test(formValue.lastName) ||
-      /\d/.test(formValue.lastName)
-    ) {
-      errors.lastName = " Last name input should have only letters";
+
+    if (!formValue.lastName.trim()) {
+      errors.lastName = "Овгоо оруулна уу";
+    } else if (!onlyLetters.test(formValue.lastName)) {
+      errors.lastName = "Овог зөвхөн үсгээр байх ёстой";
     }
-    if (
-      /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~`]/.test(formValue.userName) ||
-      /\d/.test(formValue.userName)
-    ) {
-      errors.userName = " Use name input should have only letters";
+
+    if (!formValue.userName.trim()) {
+      errors.userName = "Хэрэглэгчийн нэрээ оруулна уу";
+    } else if (!onlyLetters.test(formValue.userName)) {
+      errors.userName = "Хэрэглэгчийн нэр зөвхөн үсгээр байх ёстой";
     }
+
     return errors;
   };
-
   const handleButtonClick = () => {
     const errors = validateInput();
     if (Object.keys(errors).length === 0) {
@@ -71,15 +68,7 @@ export const StepOne = (props) => {
       setErrorState(errors);
     }
   };
-
-  const shouldDisableButton = () => {
-    return (
-      formValue.firstName.length === 0 ||
-      formValue.lastName.length === 0 ||
-      formValue.userName.length === 0
-    );
-  };
-  const disabledValue = shouldDisableButton();
+  const disabledValue = false;
 
   return (
     <div className="step">
@@ -100,8 +89,8 @@ export const StepOne = (props) => {
                 handleChange={handleInputChange}
                 name="firstName"
                 value={formValue.firstName}
-                error={errorState.firstName}
-                errorMessage="Нэрээ оруулна уу"
+                error={Boolean(errorState.firstName)}
+                errorMessage={errorState.firstName}
               />
               <FormInput
                 inputTag="Last Name"
@@ -109,8 +98,8 @@ export const StepOne = (props) => {
                 handleChange={handleInputChange}
                 name="lastName"
                 value={formValue.lastName}
-                error={errorState.lastName}
-                errorMessage="Овгоо оруулна уу."
+                error={Boolean(errorState.lastName)}
+                errorMessage={errorState.lastName}
               />
               <FormInput
                 inputTag="User Name"
@@ -118,8 +107,8 @@ export const StepOne = (props) => {
                 handleChange={handleInputChange}
                 name="userName"
                 value={formValue.userName}
-                error={errorState.userName}
-                errorMessage="Хэрэглэгчийн нэрээ оруулна уу"
+                error={Boolean(errorState.userName)}
+                errorMessage={errorState.userName}
               />
             </div>
           </div>
